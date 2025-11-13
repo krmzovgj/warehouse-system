@@ -1,6 +1,10 @@
-import { ConflictException, Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import {
+    BadRequestException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import bcrypt from 'bcrypt';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class UserService {
@@ -12,7 +16,10 @@ export class UserService {
         email: string,
         password: string,
     ) {
-        const hashed = await bcrypt.hash(password, Number(process.env.SALT_OR_ROUNDS!) || 12);
+        const hashed = await bcrypt.hash(
+            password,
+            Number(process.env.SALT_OR_ROUNDS!) || 12,
+        );
 
         return await this.prisma.user.create({
             data: {
@@ -31,12 +38,62 @@ export class UserService {
         });
     }
 
+    async findUserById(id: number) {
+        const user = await this.prisma.user.findUnique({
+            where: {
+                id,
+            },
+            select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+                password: false,
+                createdAt: true,
+            },
+        });
+
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
+
+        return user;
+    }
+
     async findUserByEmail(email: string) {
         return await this.prisma.user.findUnique({
             where: {
-                email
+                email,
             },
-        })
+        });
     }
 
+    async updateUser(
+        id: number,
+        firstName: string,
+        lastName: string,
+        email: string,
+    ) {
+        if (!id) {
+            throw new BadRequestException('User id is required');
+        }
+        
+        return await this.prisma.user.update({
+            where: {
+                id,
+            },
+            data: {
+                firstName,
+                lastName,
+                email,
+            },
+            select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+                password: false,
+            },
+        });
+    }
 }

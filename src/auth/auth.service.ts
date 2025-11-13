@@ -8,8 +8,8 @@ import bcrypt from 'bcrypt';
 @Injectable()
 export class AuthService {
     constructor(
+        private jwtService: JwtService,
         private userService: UserService,
-        private jwt: JwtService,
     ) {}
 
     async createAccount(dto: CreateAccountDto) {
@@ -39,7 +39,7 @@ export class AuthService {
         const isValid = await bcrypt.compare(dto.password, user.password);
         if (!isValid) throw new UnauthorizedException('Invalid Credentials');
 
-        const token = this.jwt.sign({ sub: user.id, email: user.email });
+        const token = this.jwtService.sign({ id: user.id, email: user.email });
         return { token };
     }
 }
