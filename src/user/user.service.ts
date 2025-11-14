@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -70,22 +71,20 @@ export class UserService {
 
     async updateUser(
         id: number,
-        firstName: string,
-        lastName: string,
-        email: string,
+        dto: UpdateUserDto
     ) {
         if (!id) {
             throw new BadRequestException('User id is required');
         }
-        
+
         return await this.prisma.user.update({
             where: {
                 id,
             },
             data: {
-                firstName,
-                lastName,
-                email,
+                firstName: dto.firstName,
+                lastName: dto.lastName,
+                email: dto.email,
             },
             select: {
                 id: true,

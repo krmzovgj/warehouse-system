@@ -1,7 +1,17 @@
-import { Controller, Get, Put, Req, UseGuards, Param } from '@nestjs/common';
+import {
+    Controller,
+    Get,
+    Put,
+    Req,
+    UseGuards,
+    Param,
+    Body,
+    ParseIntPipe,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { AuthGuard } from '../auth/auth.guard';
 import type { Request } from 'express';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('user')
 export class UserController {
@@ -10,17 +20,17 @@ export class UserController {
     @Get('me')
     @UseGuards(AuthGuard)
     getMe(@Req() req: Request) {
-        const userId = req.user.id
+        const userId = req.user.id;
 
-        return this.userService.findUserById(userId)
-    }  
-    
+        return this.userService.findUserById(userId);
+    }
+
     @Put(':id')
     @UseGuards(AuthGuard)
-    updateUser(@Req() req: Request, @Param('id') id: string) {
-        const userId = parseInt(id)
-        const { firstName, lastName, email } = req.body
-
-        return this.userService.updateUser(userId, firstName, lastName, email)
+    updateUser(
+        @Body() dto: UpdateUserDto,
+        @Param('id', ParseIntPipe) id: number,
+    ) {
+        return this.userService.updateUser(id, dto);
     }
 }

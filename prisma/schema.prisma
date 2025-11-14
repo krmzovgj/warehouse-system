@@ -8,10 +8,47 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  firstName String
-  lastName String
-  email String @unique
-  password String
-  createdAt DateTime @default(now())
+  id            Int                @id @default(autoincrement())
+  firstName     String
+  lastName      String
+  email         String             @unique
+  organizations OrganizationUser[]
+  password      String
+  createdAt     DateTime           @default(now())
+}
+
+model Organization {
+  id         String             @id @default(cuid())
+  name       String
+  inviteCode String             @unique
+  warehouse  Warehouse[]
+  users      OrganizationUser[]
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+}
+
+model Warehouse {
+  id             String       @id @default(cuid())
+  name           String
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+model OrganizationUser {
+  id             Int          @id @default(autoincrement())
+  userId         Int
+  user           User         @relation(fields: [userId], references: [id])
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  role           UserRole     @default(USER)
+  createdAt      DateTime     @default(now())
+
+  @@unique([userId, organizationId])
+}
+
+enum UserRole {
+  USER
+  OWNER
 }
