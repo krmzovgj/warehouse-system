@@ -42,7 +42,7 @@ export class OrganizationController {
     @UseGuards(AuthGuard)
     getMyOrganizations(@Req() req: Request) {
         const userId = req.user.id;
-        
+
         return this.organizationService.getMyOrganizations(userId);
     }
 
@@ -68,6 +68,17 @@ export class OrganizationController {
         return this.organizationService.updateOrganization(id, dto);
     }
 
+    @Post('join/:inviteCode')
+    @UseGuards(AuthGuard)
+    joinOrganization(
+        @Param('inviteCode') inviteCode: string,
+        @Req() req: Request,
+    ) {
+        const userId = req.user.id;
+
+        return this.organizationService.joinOrganization(userId, inviteCode);
+    }
+
     @Delete(':id/user/:userId')
     @UseGuards(AuthGuard, RolesGuard)
     @Roles(Role.OWNER)
@@ -79,16 +90,5 @@ export class OrganizationController {
             organizationId,
             userId,
         );
-    }
-
-    @Post('join/:inviteCode')
-    @UseGuards(AuthGuard)
-    joinOrganization(
-        @Param('inviteCode') inviteCode: string,
-        @Req() req: Request,
-    ) {
-        const userId = req.user.id;
-
-        return this.organizationService.joinOrganization(userId, inviteCode);
     }
 }

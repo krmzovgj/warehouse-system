@@ -23,6 +23,7 @@ model Organization {
   inviteCode String             @unique
   warehouse  Warehouse[]
   users      OrganizationUser[]
+  items      Item[]
   createdAt  DateTime           @default(now())
   updatedAt  DateTime           @updatedAt
 }
@@ -34,12 +35,34 @@ model Warehouse {
   organization   Organization @relation(fields: [organizationId], references: [id])
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
+  stocks         Stock[]
+}
+
+model Item {
+  id             String       @id @default(cuid())
+  name           String
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  stocks         Stock[]
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+model Stock {
+  id          String    @id @default(cuid())
+  unit        String?
+  quantity    Int
+  price       Decimal?
+  itemId      String
+  item        Item      @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  warehouseId String
+  warehouse   Warehouse @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
 }
 
 model OrganizationUser {
   id             Int          @id @default(autoincrement())
   userId         Int
-  user           User         @relation(fields: [userId], references: [id])
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
   role           UserRole     @default(USER)
