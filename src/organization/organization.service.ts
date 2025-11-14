@@ -109,7 +109,12 @@ export class OrganizationService {
                 organizationId: organization.id
             },
             include: {
-                organization: true
+                organization: {
+                    select: {
+                        id: true,
+                        name: true,
+                    }
+                }
             }
         })
     }

@@ -8,9 +8,10 @@ import { PrismaService } from './prisma/prisma.service';
 import { OrganizationModule } from './organization/organization.module';
 import { WarehouseModule } from './warehouse/warehouse.module';
 import { ItemModule } from './item/item.module';
+import { StockModule } from './stock/stock.module';
 
 @Module({
-  imports: [UserModule, AuthModule, PrismaModule, OrganizationModule, WarehouseModule, ItemModule],
+  imports: [UserModule, AuthModule, PrismaModule, OrganizationModule, WarehouseModule, ItemModule, StockModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })

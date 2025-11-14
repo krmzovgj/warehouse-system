@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
-import { CreateWarehouseDto } from './dto/create-warehouse.dto';
-import { WarehouseService } from './warehouse.service';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { CreateWarehouseDto } from './dto/create-warehouse.dto';
 import { UpdateWarehouseDto } from './dto/update-warehouse.dto';
+import { WarehouseService } from './warehouse.service';
 
 @Controller('warehouse')
 export class WarehouseController {

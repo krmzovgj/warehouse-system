@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+    BadRequestException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { createItemDto } from './dto/create-item.dto';
 import { updateItemDto } from './dto/update-item.dto';
@@ -37,7 +41,17 @@ export class ItemService {
             throw new BadRequestException('Item id is required');
         }
 
-        return await this.prisma.item.update({
+        const item = await this.prisma.item.findUnique({
+            where: {
+                id,
+            },
+        });
+
+        if (!item) {
+            throw new NotFoundException('Item not found');
+        }
+
+        return await this.prisma.item.updateMany({
             where: {
                 id,
             },
