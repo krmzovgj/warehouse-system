@@ -55,17 +55,31 @@ export class WarehouseService {
     }
 
     async updateWarehouse(id: string, dto: UpdateWarehouseDto) {
-        if(!id) {
-            throw new BadRequestException("Warehouse id must be provided")
+        if (!id) {
+            throw new BadRequestException('Warehouse id must be provided');
         }
-        
+
         return await this.prisma.warehouse.update({
             where: {
-                id
+                id,
             },
             data: {
-                name: dto.name
-            }
-        })
+                name: dto.name,
+            },
+        });
+    }
+
+    async deleteWarehouse(id: string) {
+        if (!id) {
+            throw new BadRequestException('Warehouse id is required');
+        }
+
+        await this.prisma.warehouse.delete({
+            where: {
+                id,
+            },
+        });
+
+        return { message: 'Warehouse deleted' };
     }
 }

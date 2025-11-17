@@ -46,26 +46,26 @@ export class OrganizationController {
         return this.organizationService.getMyOrganizations(userId);
     }
 
-    @Get(':id')
+    @Get(':organizationId')
     @UseGuards(AuthGuard)
-    getOrganizationById(@Param('id') id: string) {
-        return this.organizationService.getOrganizationById(id);
+    getOrganizationById(@Param('organizationId') organizationId: string) {
+        return this.organizationService.getOrganizationById(organizationId);
     }
 
-    @Get(':id/warehouse')
+    @Get(':organizationId/warehouse')
     @UseGuards(AuthGuard)
-    getWarehouseByOrganization(@Param('id') id: string) {
-        return this.warehouseService.getWarehouseByOrganization(id);
+    getWarehouseByOrganization(@Param('organizationId') organizationId: string) {
+        return this.warehouseService.getWarehouseByOrganization(organizationId);
     }
 
-    @Put(':id')
+    @Put(':organizationId')
     @UseGuards(AuthGuard, RolesGuard)
     @Roles(Role.OWNER)
     updateOrganization(
-        @Param('id') id: string,
+        @Param('organizationId') organizationId: string,
         @Body() dto: UpdateOrganizationDto,
     ) {
-        return this.organizationService.updateOrganization(id, dto);
+        return this.organizationService.updateOrganization(organizationId, dto);
     }
 
     @Post('join/:inviteCode')
@@ -79,11 +79,11 @@ export class OrganizationController {
         return this.organizationService.joinOrganization(userId, inviteCode);
     }
 
-    @Delete(':id/user/:userId')
+    @Delete(':organizationId/user/:userId')
     @UseGuards(AuthGuard, RolesGuard)
     @Roles(Role.OWNER)
     removeUserFromOrganization(
-        @Param('id') organizationId: string,
+        @Param('organizationId') organizationId: string,
         @Param('userId', ParseIntPipe) userId: number,
     ) {
         return this.organizationService.removeUserFromOrganization(

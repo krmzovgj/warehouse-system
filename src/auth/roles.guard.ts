@@ -5,33 +5,39 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-  constructor(private reflector: Reflector, private prisma: PrismaService) {}
+    constructor(
+        private reflector: Reflector,
+        private prisma: PrismaService,
+    ) {}
 
-  async canActivate(context: ExecutionContext): Promise<boolean> {
-    const requiredRoles = this.reflector.getAllAndOverride<string[]>(ROLES_KEY, [
-      context.getHandler(),
-      context.getClass(),
-    ]);
+    async canActivate(context: ExecutionContext): Promise<boolean> {
+        const requiredRoles = this.reflector.getAllAndOverride<string[]>(
+            ROLES_KEY,
+            [context.getHandler(), context.getClass()],
+        );
 
-    if (!requiredRoles) return true; 
+        if (!requiredRoles) return true;
 
-    const request = context.switchToHttp().getRequest();
-    const user = request.user; 
-    const organizationId = request.params.id || request.body.organizationId;
+        const request = context.switchToHttp().getRequest();
+        const user = request.user;
+        const organizationId =
+            request.query.organizationId ||
+            request.body.organizationId ||
+            request.params.organizationId;
 
-    if (!organizationId) return false;
+        if (!organizationId) return false;
 
-    const organizationUser = await this.prisma.organizationUser.findUnique({
-      where: {
-        userId_organizationId: { 
-          userId: user.id,
-          organizationId,
-        },
-      },
-    });
+        const organizationUser = await this.prisma.organizationUser.findUnique({
+            where: {
+                userId_organizationId: {
+                    userId: user.id,
+                    organizationId,
+                },
+            },
+        });
 
-    if (!organizationUser) return false;
+        if (!organizationUser) return false;
 
-    return requiredRoles.includes(organizationUser.role);
-  }
+        return requiredRoles.includes(organizationUser.role);
+    }
 }
