@@ -2,6 +2,7 @@ import {
     BadRequestException,
     Injectable,
     NotFoundException,
+    UnauthorizedException,
 } from '@nestjs/common';
 import bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service';
@@ -69,10 +70,7 @@ export class UserService {
         });
     }
 
-    async updateUser(
-        id: number,
-        dto: UpdateUserDto
-    ) {
+    async updateUser(id: number, dto: UpdateUserDto) {
         if (!id) {
             throw new BadRequestException('User id is required');
         }
@@ -94,5 +92,19 @@ export class UserService {
                 password: false,
             },
         });
+    }
+
+    async deleteUser(id: number) {
+        const user = await this.prisma.user.delete({
+            where: {
+                id,
+            },
+        });
+
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
+        
+        return { message: 'User deleted' };
     }
 }

@@ -27,22 +27,22 @@ export class WarehouseController {
         return this.warehouseService.createWarehouse(dto);
     }
 
-    @Get(':id')
+    @Get(':warehouseId')
     @UseGuards(AuthGuard)
-    getWarehouseById(@Param('id') id: string) {
-        return this.warehouseService.getWarehouseById(id);
+    getWarehouseById(@Param('warehouseId') warehouseId: string) {
+        return this.warehouseService.getWarehouseById(warehouseId);
     }
 
-    @Put(':id')
+    @Put(':warehouseId')
     @UseGuards(AuthGuard)
-    updateWarehouse(@Param('id') id: string, @Body() dto: UpdateWarehouseDto) {
-        return this.warehouseService.updateWarehouse(id, dto);
+    updateWarehouse(@Param('warehouseId') warehouseId: string, @Body() dto: UpdateWarehouseDto) {
+        return this.warehouseService.updateWarehouse(warehouseId, dto);
     }
 
-    @Delete(':id')
+    @Delete(':warehouseId')
     @UseGuards(AuthGuard, RolesGuard)
     @Roles(Role.OWNER)
-    deleteWarehouse(@Param('id') id: string) {
-        return this.warehouseService.deleteWarehouse(id);
+    deleteWarehouse(@Param('warehouseId') warehouseId: string) {
+        return this.warehouseService.deleteWarehouse(warehouseId);
     }
 }

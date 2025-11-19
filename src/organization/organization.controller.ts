@@ -27,7 +27,7 @@ export class OrganizationController {
         private warehouseService: WarehouseService,
     ) {}
 
-    @Post()
+    @Post()                   
     @UseGuards(AuthGuard)
     createOrganization(
         @Req() req: Request,
@@ -75,7 +75,7 @@ export class OrganizationController {
         @Req() req: Request,
     ) {
         const userId = req.user.id;
-
+        
         return this.organizationService.joinOrganization(userId, inviteCode);
     }
 

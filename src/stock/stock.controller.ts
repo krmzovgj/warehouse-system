@@ -20,15 +20,15 @@ export class StockController {
         return this.stockService.getStocks(itemId, warehouseId)
     }
 
-    @Put(':id')
+    @Put(':stockId')
     @UseGuards(AuthGuard)
-    updateStock(@Param('id') id: string, @Body() dto: UpdateStockDto) {
-        return this.stockService.updateStock(id, dto)
+    updateStock(@Param('stockId') stockId: string, @Body() dto: UpdateStockDto) {
+        return this.stockService.updateStock(stockId, dto)
     }
 
-    @Delete(':id')
+    @Delete(':stockId')
     @UseGuards(AuthGuard)
-    deleteStock(@Param('id') id: string) {
-        return this.stockService.deleteStock(id) 
+    deleteStock(@Param('stockId') stockId: string) {
+        return this.stockService.deleteStock(stockId) 
     }
 }

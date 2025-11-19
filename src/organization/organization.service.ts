@@ -19,8 +19,7 @@ export class OrganizationService {
         }
 
         const inviteCode = generateInviteCode();
-
-        console.log(inviteCode);
+        
         const organization = await this.prisma.organization.create({
             data: {
                 name: dto.name,
@@ -42,17 +41,17 @@ export class OrganizationService {
     async getMyOrganizations(userId: number) {
         return await this.prisma.organizationUser.findMany({
             where: {
-                userId
+                userId,
             },
             include: {
                 organization: {
                     select: {
                         id: true,
-                        name: true
-                    }
-                }
-            }
-        }) 
+                        name: true,
+                    },
+                },
+            },
+        });
     }
 
     async getOrganizationById(id: string) {
@@ -95,28 +94,28 @@ export class OrganizationService {
 
         const organization = await this.prisma.organization.findUnique({
             where: {
-                inviteCode
+                inviteCode,
             },
-        })
+        });
 
-        if(!organization) {
-            throw new NotFoundException("Organization not found")
+        if (!organization) {
+            throw new NotFoundException('Organization not found');
         }
 
         return await this.prisma.organizationUser.create({
             data: {
                 userId,
-                organizationId: organization.id
+                organizationId: organization.id,
             },
             include: {
                 organization: {
                     select: {
                         id: true,
                         name: true,
-                    }
-                }
-            }
-        })
+                    },
+                },
+            },
+        });
     }
 
     async removeUserFromOrganization(organizationId: string, userId: number) {

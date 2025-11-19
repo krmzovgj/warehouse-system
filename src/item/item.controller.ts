@@ -30,15 +30,15 @@ export class ItemController {
         return this.itemService.getItemsInOrganization(organizationId);
     }
 
-    @Put(':id')
+    @Put(':itemId')
     @UseGuards(AuthGuard)
-    updateItem(@Param('id') id: string, @Body() dto: updateItemDto) {
-        return this.itemService.updateItem(id, dto);
+    updateItem(@Param('itemId') itemId: string, @Body() dto: updateItemDto) {
+        return this.itemService.updateItem(itemId, dto);
     }
 
-    @Delete(':id')
+    @Delete(':itemId')
     @UseGuards(AuthGuard)
-    deleteItem(@Param('id') id: string) {
-        return this.itemService.deleteItem(id);
+    deleteItem(@Param('itemId') itemId: string) {
+        return this.itemService.deleteItem(itemId);
     }
 }
