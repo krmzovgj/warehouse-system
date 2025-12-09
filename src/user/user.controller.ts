@@ -1,19 +1,18 @@
 import {
+    Body,
     Controller,
+    Delete,
     Get,
+    Param,
+    ParseIntPipe,
     Put,
     Req,
     UseGuards,
-    Param,
-    Body,
-    ParseIntPipe,
-    Delete,
 } from '@nestjs/common';
-import { UserService } from './user.service';
-import { AuthGuard } from '../auth/auth.guard';
 import type { Request } from 'express';
+import { AuthGuard } from '../auth/auth.guard';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { NotFoundError } from 'rxjs';
+import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {

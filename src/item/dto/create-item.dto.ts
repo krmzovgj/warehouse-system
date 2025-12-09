@@ -6,13 +6,13 @@ export class createItemDto {
     @IsNotEmpty()
     name: string;
 
-    // @IsString()
-    // unit: string;
+    @IsString()
+    unit: string;
 
-    // @IsNumber()
-    // quantity: number;
+    @IsNumber()
+    quantity: number;
 
-    // price: Prisma.Decimal | number | string;
+    price: Prisma.Decimal | number | string;
 
     @IsString()
     @IsNotEmpty()
