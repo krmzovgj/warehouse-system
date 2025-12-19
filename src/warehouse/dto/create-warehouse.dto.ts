@@ -4,8 +4,4 @@ export class CreateWarehouseDto {
   @IsString()
   @IsNotEmpty()
   name: string;
-
-  @IsString()
-  @IsNotEmpty()
-  organizationId: string;
 }

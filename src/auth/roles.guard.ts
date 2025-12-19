@@ -20,10 +20,7 @@ export class RolesGuard implements CanActivate {
 
         const request = context.switchToHttp().getRequest();
         const user = request.user;
-        const organizationId =
-            request.query.organizationId ||
-            request.body.organizationId ||
-            request.params.organizationId;
+        const organizationId = String(request.headers['organizationid']);
 
         if (!organizationId) return false;
 

@@ -7,6 +7,7 @@ import {
     Param,
     Post,
     Put,
+    Req,
     UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/auth.guard';
@@ -16,15 +17,22 @@ import { RolesGuard } from 'src/auth/roles.guard';
 import { CreateWarehouseDto } from './dto/create-warehouse.dto';
 import { UpdateWarehouseDto } from './dto/update-warehouse.dto';
 import { WarehouseService } from './warehouse.service';
+import { OrganizationGuard } from 'src/organization/organization.guard';
+import type { Request } from 'express';
 
 @Controller('warehouse')
 export class WarehouseController {
     constructor(private warehouseService: WarehouseService) {}
 
     @Post()
-    @UseGuards(AuthGuard)
-    createWarehouse(@Body() dto: CreateWarehouseDto) {
-        return this.warehouseService.createWarehouse(dto);
+    @UseGuards(AuthGuard, OrganizationGuard)
+    createWarehouse(@Body() dto: CreateWarehouseDto, @Req() req: Request) {
+        const membership = req['organizationMembership'];
+
+        return this.warehouseService.createWarehouse(
+            dto,
+            membership.organizationId,
+        );
     }
 
     @Get(':warehouseId')
@@ -34,15 +42,33 @@ export class WarehouseController {
     }
 
     @Put(':warehouseId')
-    @UseGuards(AuthGuard)
-    updateWarehouse(@Param('warehouseId') warehouseId: string, @Body() dto: UpdateWarehouseDto) {
-        return this.warehouseService.updateWarehouse(warehouseId, dto);
+    @UseGuards(AuthGuard, OrganizationGuard)
+    updateWarehouse(
+        @Param('warehouseId') warehouseId: string,
+        @Body() dto: UpdateWarehouseDto,
+        @Req() req: Request,
+    ) {
+        const membership = req['organizationMembership'];
+
+        return this.warehouseService.updateWarehouse(
+            warehouseId,
+            membership.organizationId,
+            dto,
+        );
     }
 
     @Delete(':warehouseId')
-    @UseGuards(AuthGuard, RolesGuard)
+    @UseGuards(AuthGuard, OrganizationGuard, RolesGuard)
     @Roles(Role.OWNER)
-    deleteWarehouse(@Param('warehouseId') warehouseId: string) {
-        return this.warehouseService.deleteWarehouse(warehouseId);
+    deleteWarehouse(
+        @Param('warehouseId') warehouseId: string,
+        @Req() req: Request,
+    ) {
+        const membership = req['organizationMembership'];
+
+        return this.warehouseService.deleteWarehouse(
+            warehouseId,
+            membership.organizationId,
+        );
     }
 }
